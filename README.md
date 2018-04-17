@@ -7,7 +7,7 @@
 * 2 classes: preictal (65-5min prior to seizure) and interictal (> 4hrs before or after a seizure)
   * 1:9 positve to negative class ratio
 
-![pre_v_int](pre_v_int.png)
+![pre_v_int](/plots/pre_v_int.png)
 
 #### Tools
 

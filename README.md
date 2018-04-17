@@ -1,8 +1,12 @@
 ## Early Seizure Detection
 
+#### Problem Statement
+
+* Predict seizures at least 5 minutes prior to seizure onset through analyzing intracranial electroencephalography (iEEG) data—'brain waves.'
+
 #### Data
 
-* 1000 ~ten-minute intracranial electroencephalography (iEEG) intervals recorded at 400hz.
+* 1000 ~ten-minute intervals of iEEG data recorded at 400hz.
   * 16 seperate electrodes simultaneously recorded brain voltage for each interval
 * 2 classes: preictal (65-5min prior to seizure) and interictal (> 4hrs before or after a seizure)
   * 1:9 positve to negative class ratio
@@ -11,28 +15,34 @@
 
 #### Tools
 
-* AWS—I downloaded all data directly to AWS for analysis
+* AWS—downloaded all data directly to AWS for analysis
+* Jupyter Notebook
+* Python libraries:
+  * pandas, scikit-learn, XGBoost, matplotlib, seaborn, NumPy, SciPy
+* Tableau
 
 #### Objective
 
 * Maximize recall (early seizure detection) while maintaing good precision
-  * I used AUC and F1 during model selection, but looked at recall and precision in order to better understand how the model would function if deployed.
-  * Prioritized recall over precision as underdiagnosis is more problematic than overdiagnosis.
+  * Used AUC and F1 during model selection, but looked at recall and precision in order to better understand how the model would function if deployed.
+  * Prioritized recall over precision to minimize underdiagnosis.
 
 #### Approach
 
-* I split each ~10min interval into 39 fifteen-second intervals for model training
-* The 39 predictions for each 10min interval would then be passed as features to a second model for making a prediction for each 10min segment.
+* Stacked two models
+  * Split each ~10-min interval into multiple fifteen-second intervals with the first model predicting for each 15-second interval.
+  * These 39 predictions were then passed as features to a second model in order to make a final prediction for the entire 10-minute segment.
 
 #### Features
 
-* I settled on using max sequential measurements with a voltage between -50 and 50, 1st and 99th percentile values, standard deviation of values and means of each of the above measurements across all channels as features. I based feature selection on weight, gain, and cross validation scores.
+* Feature selection was based on weight, gain, and cross validation scores.
+* Used most sequential measurements with a voltage between -50 and 50, 1st and 99th percentile values, standard deviation of values and means of each of the above measurements across all channels as features.
 
 #### Models
 
-* I started off with a random forest and found that a combination of setting minimum leaf size to fifteen and adjusting my threshold increased my initial f1 score from ~0.25 to ~0.45.
-* Next, I tried XGBoost which instantly gave me a slightly better score than the random forest model and I was able to modestly increase the initial score through tuning hyperparameters.
-* I then took the out-of-sample predictions (3-fold cv) from the XGBoost model and passed the mean of these predictions to a logistic regression model.
-  * Eventually I settled on using the mean of the 20 highest probabilites (39 total) as my primary feature. This mean provided more robustness to noise than using a smaller proportion of the probabilities, but didn't allow several low proabilites to offset high probabilities for other intervals.
+* Acheived higher cross-validation scores with XGBoost than random forest models.
+* Took the out-of-sample predictions (3-fold CV) from XGBoost model and passed these predictions to a logistic regression model.
+  * Settled on using the mean of the 20 highest probabilites (39 total) as  the primary feature for logistic regression model.
+    * This mean provided an optimal tradeoff between robustness to noise and sensitivity to individual results.
 * Final testing scores: recall—1.0, precision—0.5, AUC—0.93.
 

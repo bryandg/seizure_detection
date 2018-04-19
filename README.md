@@ -1,8 +1,12 @@
 ## Early Seizure Detection
 
+#### Overview
+
+The data for this project  was provided by  the American Epilepsy Society as part of a Kaggle [competition](https://www.kaggle.com/c/seizure-prediction). The data consists of intracranial electroencephalography (iEEG) or 'brain wave' data for five dogs and two human patients, all of whom experience epileptic seizures. The goal is to predict seizures at least 5 minutes prior to seizure onset through binary classification. For this project I chose to focus exclusively on 'dog_4.'
+
 #### Problem Statement
 
-* Predict seizures at least 5 minutes prior to seizure onset through analyzing intracranial electroencephalography (iEEG) data—'brain waves.'
+* Predict seizures at least 5 minutes prior to seizure onset.
 
 #### Data
 
